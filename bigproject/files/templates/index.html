@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project name goes here | The Gazette/KCRG</title>
+    <!-- <meta http-equiv="refresh" content="300"> -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+    <!-- Mobile meta tags-->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta http-equiv="cleartype" content="on">
+    <!-- Facebook meta tags-->
+    <meta property="og:title" content="Project name goes here"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:url" content="Project URL goes here"/>
+    <meta property="og:site_name" content="The Gazette/KCRG"/>
+    <meta property="og:description" content="The project's full description goes here" />
+    <!-- Twitter meta tags -->
+    <meta property="twitter:site" content="@gazettedotcom">
+    <meta property="twitter:card" content="Short description goes here">
+    <meta property="twitter:url" content="Project URL goes here">
+    <meta property="twitter:title" content="Project name goes here">
+    <meta property="twitter:description" content="The project's full description goes here">
+
+    <!-- INCLUDES -->
+    <!-- Base styles: Libraries -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    
+    <!-- Base styles -->
+    <link rel="stylesheet" href="public/css/base.css" />
+
+    <!-- JS: Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+    <!-- Content-->
+    <div class="content">
+        <!-- Header-->
+        <div class="header">
+            <div class="logos">
+                <h1> Faisal </h1>
+            </div>
+            <h1 class="hide-iframe"></h1>
+            </div>
+        <!-- Closes header-->
+        </div>
+
+    <!-- CONTENT GOES HERE -->
+    <div id="body-content">
+        <h1 class="hide-iframe">Big Project Training NA</h1>
+        <!-- Subhead -->
+        <div class="header header-sub hide-desktop show-iframe">
+            <div class="header-sub-header">
+                <p>By Faisal</p>
+            </div>
+        </div>
+        <!-- Content box-->
+        <div id="content-box">
+            <p id="first-p" class="intro-text">By Muhammad Faisal Alfaruqi</p>
+            <p id="first-p" class="intro-text">Visitor Count : <b><span id="visitor-count"></span></b></p>
+            <span>
+                <input type="text" id="name" name="name" placeholder="Search By Name"/>
+                <button class="btn btn-primary" id="search-btn">Search</button>
+            </span>
+            <table id="user-table" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>MSISDN</th>
+                        <th>Email</th>
+                        <th>Birth Date</th>
+                        <th>Created Time</th>
+                        <th>Updated Time</th>
+                        <th>Age</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        <!-- Close content box-->
+       </div>
+       <div id="footer" class="header hide-desktop show-mobile">
+            <a href="#">Scroll to top</a>
+        </div>
+    <!-- Close body content-->
+    </div>
+</body>
+
+    <script>
+        $(document).ready(function() {
+            $.get(
+                "get-user",
+                function(response){
+                    response.Data.forEach(function(data) {
+                        $('#user-table > tbody:last-child').append('<tr> \
+                            <td>'+data.id+'</td>\
+                            <td>'+data.name+'</td>\
+                            <td>'+data.msisdn+'</td>\
+                            <td>'+data.email+'</td>\
+                            <td>'+data.birth_date+'</td>\
+                            <td>'+data.created_time+'</td>\
+                            <td>'+data.updated_time+'</td>\
+                            <td>'+data.age+'</td>\
+                            </tr>')
+                    });
+                }
+            );
+            $.get(
+                "get-visitor-count",
+                function(response){
+                    $('#visitor-count').html(response.Data);
+                }
+            );
+
+            $('#search-btn').click(function() {
+                var name = $('#name').val();
+                $.ajax({
+                    url: "get-user",
+                    type: "get",
+                    data:{
+                        name: name,
+                    },
+                    success: function(response){
+                        $('#user-table > tbody > tr').remove();
+                        response.Data.forEach(function(data) {
+                            $('#user-table > tbody:last-child').append('<tr> \
+                                <td>'+data.id+'</td>\
+                                <td>'+data.name+'</td>\
+                                <td>'+data.msisdn+'</td>\
+                                <td>'+data.email+'</td>\
+                                <td>'+data.birth_date+'</td>\
+                                <td>'+data.created_time+'</td>\
+                                <td>'+data.updated_time+'</td>\
+                                <td>'+data.age+'</td>\
+                                </tr>')
+                        });
+                    }
+                });
+            });
+            
+        });
+    </script>
+</html>

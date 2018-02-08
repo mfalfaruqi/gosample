@@ -2,12 +2,15 @@ package main
 
 import (
 	"flag"
-	"github.com/google/gops/agent"
 	"log"
 	"net/http"
 
+	"github.com/google/gops/agent"
+
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
+	"github.com/tokopedia/gosample/bigproject"
+	"github.com/tokopedia/gosample/bigproject/src/handler"
 	"github.com/tokopedia/gosample/hello"
 	"github.com/tokopedia/logging/tracer"
 	"gopkg.in/tokopedia/grace.v1"
@@ -35,6 +38,15 @@ func main() {
 	go logging.StatsLog()
 
 	tracer.Init(&tracer.Config{Port: 8700, Enabled: true})
+
+	// big project http handler
+	bigproject.InitBP()
+	http.HandleFunc("/", handler.Home)
+	http.HandleFunc("/get-user", handler.GetUser)
+	http.HandleFunc("/get-visitor-count", handler.GetVisitorCount)
+
+	http.Handle("/public/",
+		http.StripPrefix("/public/", http.FileServer(http.Dir("bigproject/files/templates/public/"))))
 
 	log.Fatal(grace.Serve(":9000", nil))
 }
